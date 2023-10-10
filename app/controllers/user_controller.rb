@@ -4,7 +4,7 @@ class UserController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      NotificationWorker.perform_async(@user.id)
+      NotificationWorker.perform_async(@user.id, action_name)
       render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
@@ -13,7 +13,7 @@ class UserController < ApplicationController
 
   def update
     if @user.update(user_params)
-      NotificationWorker.perform_async(@user.id)
+      NotificationWorker.perform_async(@user.id, action_name)
       render json: @user, status: :ok
     else
       render json: @user.errors, status: :unprocessable_entity
